@@ -6,6 +6,9 @@ const Home = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (userInput.trim() === "") {
+			return;
+		}
 		const searchResponse = await fetch("/api/search", {
 			method: "POST",
 			headers: {
@@ -19,11 +22,14 @@ const Home = () => {
 	};
 
 	return (
-		<div className="flex justify-center">
-			<div className="mt-24 w-full max-w-xl">
+		<div className="flex flex-col items-center">
+			<h1 className="text-4xl font-bold mt-8 mb-12 text-blue-600">
+				Cursor AI
+			</h1>
+			<div className="w-full max-w-3xl px-4 sm:px-6 lg:px-8">
 				<form
 					onSubmit={handleSubmit}
-					className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+					className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full">
 					<div className="mb-4">
 						<input
 							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -40,11 +46,15 @@ const Home = () => {
 							Submit
 						</button>
 					</div>
-					{response && (
-						<div className="text-left mt-4">
+					<div className="text-left mt-4">
+						{response ? (
 							<p>{response}</p>
-						</div>
-					)}
+						) : (
+							<p className="text-gray-500">
+								Answer to your question will be displayed here
+							</p>
+						)}
+					</div>
 				</form>
 			</div>
 		</div>
