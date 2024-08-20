@@ -1,10 +1,14 @@
 import {useState} from "react";
+import {ArticleChunk} from "@/types";
 
 const Home = () => {
 	const [userInput, setUserInput] = useState("");
 	const [response, setResponse] = useState("");
+	const [chunks, setChunks] = useState<ArticleChunk[]>([]);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		setResponse("");
+		setChunks([]);
 		e.preventDefault();
 		if (userInput.trim() === "") {
 			return;
@@ -17,7 +21,8 @@ const Home = () => {
 			body: JSON.stringify({question: userInput}),
 		});
 
-		const {chunks} = await searchResponse.json();
+		const {chunks: searchChunks} = await searchResponse.json();
+		setChunks(searchChunks);
 
 		const answerResponse = await fetch("/api/answer", {
 			method: "POST",
@@ -58,7 +63,45 @@ const Home = () => {
 					</div>
 					<div className="text-left mt-4">
 						{response ? (
-							<p>{response}</p>
+							<>
+								<p className="mb-4">{response}</p>
+								{chunks.length > 0 && (
+									<>
+										<h2 className="text-2xl font-semibold mb-3">
+											Read more
+										</h2>
+										<ul className="space-y-3">
+											{chunks
+												.filter(
+													(chunk, index, self) =>
+														index ===
+														self.findIndex(
+															t =>
+																t.article_url ===
+																chunk.article_url
+														)
+												)
+												.map((chunk, index) => (
+													<li
+														key={index}
+														className="border-b pb-2">
+														<a
+															href={
+																chunk.article_url
+															}
+															target="_blank"
+															rel="noopener noreferrer"
+															className="text-blue-600 hover:text-blue-800 font-medium">
+															{
+																chunk.article_title
+															}
+														</a>
+													</li>
+												))}
+										</ul>
+									</>
+								)}
+							</>
 						) : (
 							<p className="text-gray-500">Summary here</p>
 						)}
