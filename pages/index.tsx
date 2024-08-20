@@ -17,14 +17,24 @@ const Home = () => {
 			body: JSON.stringify({question: userInput}),
 		});
 
-		const {question} = await searchResponse.json();
-		setResponse(question);
+		const {chunks} = await searchResponse.json();
+
+		const answerResponse = await fetch("/api/answer", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({prompt: userInput}),
+		});
+
+		const {answer} = await answerResponse.json();
+		setResponse(answer);
 	};
 
 	return (
 		<div className="flex flex-col items-center">
 			<h1 className="text-4xl font-bold mt-8 mb-12 text-blue-600">
-				Cursor AI
+				Cursor
 			</h1>
 			<div className="w-full max-w-3xl px-4 sm:px-6 lg:px-8">
 				<form
@@ -50,9 +60,7 @@ const Home = () => {
 						{response ? (
 							<p>{response}</p>
 						) : (
-							<p className="text-gray-500">
-								Answer to your question will be displayed here
-							</p>
+							<p className="text-gray-500">Summary here</p>
 						)}
 					</div>
 				</form>
