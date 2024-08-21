@@ -17,8 +17,9 @@ export const OpenAIStream = async (prompt: string) => {
 			messages: [
 				{
 					role: "system",
-					content: `You are a helpful assistant that
-					answers queries the current state of economic conditions.
+					content: `You are an expert in the field of economics and finance. 
+					You are a helpful assistant that answers queries the current 
+					state of economic conditions.
 					Respond in 3-5 sentences.`,
 				},
 				{
@@ -31,6 +32,10 @@ export const OpenAIStream = async (prompt: string) => {
 			// stream: true,
 		}),
 	});
+
+	if (!response.ok) {
+		throw new Error("OpenAI API request failed");
+	}
 
 	const json = await response.json();
 

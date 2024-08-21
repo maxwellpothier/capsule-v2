@@ -14,6 +14,12 @@ const generateEmbeddings = async (essays: Article[]) => {
 		process.env.SUPABASE_SERVICE_ROLE_KEY!
 	);
 
+	const {error} = await supabase.from("capsule").delete().neq("id", 0);
+
+	if (error) {
+		console.log("Error deleting existing data:", error);
+	}
+
 	for (let i = 0; i < essays.length; i++) {
 		const {chunks} = essays[i];
 

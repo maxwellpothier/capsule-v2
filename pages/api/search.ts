@@ -35,7 +35,7 @@ const handler = async (req: NextRequest): Promise<NextResponse> => {
 			"capsule_search",
 			{
 				query_embedding: embedding,
-				similarity_threshold: 0.25,
+				similarity_threshold: 0.01,
 				match_count: 5,
 			}
 		);

@@ -1,4 +1,5 @@
 import {useState} from "react";
+import endent from "endent";
 import {ArticleChunk} from "@/types";
 
 const Home = () => {
@@ -24,12 +25,19 @@ const Home = () => {
 		const {chunks: searchChunks} = await searchResponse.json();
 		setChunks(searchChunks);
 
+		console.log(searchChunks);
+
+		const prompt = endent`
+		Use the following passages to answer the question: ${userInput}
+		${searchChunks.map((chunk: ArticleChunk) => chunk.content).join("\n\n")}
+		`;
+
 		const answerResponse = await fetch("/api/answer", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({prompt: userInput}),
+			body: JSON.stringify({prompt: prompt}),
 		});
 
 		const {answer} = await answerResponse.json();

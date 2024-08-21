@@ -117,7 +117,7 @@ const getArticleChunks = async (article: Article): Promise<Article> => {
 				currentChunk = "";
 			}
 
-			if (sentence[sentence.length - 1].match(/[a-z0-9]/i)) {
+			if (sentence[sentence.length - 1]?.match(/[a-z0-9]/i)) {
 				currentChunk += sentence + ". ";
 			} else {
 				currentChunk += sentence + " ";
